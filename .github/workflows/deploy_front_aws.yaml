@@ -1,0 +1,62 @@
+name: Deploy React to AWS
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  id-token: write # Necessário se usar OIDC (recomendado)
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Build Project
+        run: npm run build
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      # Passo 1: Deploy da Infraestrutura (CloudFormation)
+      - name: Deploy Infrastructure
+        id: cloudformation
+        uses: aws-actions/aws-cloudformation-github-deploy@v1
+        with:
+          name: front-spotispec-stack
+          template: infra/template.yaml
+          no-fail-on-empty-changeset: "1"
+
+      # Captura os Outputs do CloudFormation para usar nos próximos passos
+      - name: Get Stack Outputs
+        run: |
+          echo "BUCKET_NAME=$(aws cloudformation describe-stacks --stack-name meu-stack-react --query "Stacks[0].Outputs[?OutputKey=='BucketName'].OutputValue" --output text)" >> $GITHUB_ENV
+          echo "DIST_ID=$(aws cloudformation describe-stacks --stack-name meu-stack-react --query "Stacks[0].Outputs[?OutputKey=='DistributionId'].OutputValue" --output text)" >> $GITHUB_ENV
+
+      # Passo 2: Upload dos arquivos para o S3
+      - name: Deploy to S3
+        run: |
+          # O diretório de build do Vite geralmente é 'dist'
+          aws s3 sync ./dist s3://${{ env.BUCKET_NAME }} --delete
+
+      # Passo 3: Invalidar Cache do CloudFront (para ver as mudanças na hora)
+      - name: Invalidate CloudFront
+        run: |
+          aws cloudfront create-invalidation --distribution-id ${{ env.DIST_ID }} --paths "/*"
