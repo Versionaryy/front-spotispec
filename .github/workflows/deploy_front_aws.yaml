@@ -41,7 +41,7 @@ jobs:
         uses: aws-actions/aws-cloudformation-github-deploy@v1
         with:
           name: front-spotispec-stack
-          template: infra/template.yaml
+          template: infra/template_cfn.yaml
           no-fail-on-empty-changeset: "1"
 
       # Captura os Outputs do CloudFormation para usar nos próximos passos
