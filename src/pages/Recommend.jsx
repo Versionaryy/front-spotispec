@@ -64,22 +64,26 @@ function RecommendPage() {
         ) : (!isLoading && song == null) ? (
             <form onSubmit={(e) => { e.preventDefault(); const fd = new FormData(e.target); postRecommendation(fd); }} style={{display: 'flex', flexDirection: 'column'}}>
             <label htmlFor="genero">Gênero da música</label>
-            <select name="genero" id="genero">
-                <option value="Rock">Rock</option>
-                <option value="Pop">Pop</option>
-                <option value="Hip Hop">Hip Hop</option>
-                <option value="Eletrônica">Eletrônica</option>
-            </select>
+                    <select name="genero" id="genero" style={{width: '100%', padding: '0.5rem'}}>
+                        <option value="Rock">Rock</option>
+                        <option value="Pop">Pop</option>
+                        <option value="Hip-Hop">Hip-Hop</option>
+                        <option value="Metal">Metal</option>
+                        <option value="MPB">MPB</option>
+                        <option value="Sertanejo">Sertanejo</option>
+                        <option value="Eletrônica">Eletrônica</option>
+                    </select>
 
             <label htmlFor="energia">Energia</label>
-            <select name="energia" id="energia">
+            <select name="energia" id="energia" style={{width: '100%', padding: '0.5rem'}}>
                 <option value="Alta">Alta</option>
                 <option value="Média">Média</option>
                 <option value="Baixa">Baixa</option>
             </select>
-
-            <label htmlFor="curta">Menor que 3:30 minutos</label>
-            <input type="checkbox" name="curta" id="curta" />
+            <div>
+                <label htmlFor="curta">Menor que 3:30 minutos</label>
+                <input type="checkbox" name="curta" id="curta"/>
+            </div>
             <button type="submit">Enviar</button>
         </form>
         ) : (
