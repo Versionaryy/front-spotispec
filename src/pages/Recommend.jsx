@@ -82,12 +82,7 @@ function RecommendPage() {
             
             <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
                 
-                <div style={{maxWidth: 600, textAlign: 'left'}}>
-                    <strong>Explicação:</strong>
-                   <p style={{marginTop: 6}}>
-    {typeof explicacao === 'string' ? explicacao : JSON.stringify(explicacao)}
-</p>
-                </div>
+                <p>Funcionou</p>
             </div>
         )}
         </div>
