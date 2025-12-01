@@ -33,13 +33,25 @@ function RecommendPage() {
             }
 
             const data = await response.json()
-            if (data.musica && typeof data.musica === 'object') {
-                setSong(data.musica)
-                setExplicacao(data.explicacao || '')
+            console.log('Resposta completa da API:', data)
+            console.log('Tipo de data:', typeof data, 'É array?', Array.isArray(data))
+            
+            // Se a resposta é um array, pega o primeiro elemento
+            let musicData = Array.isArray(data) ? data[0] : data.musica
+            
+            console.log('Dados da música após extração:', musicData)
+            console.log('Tipo de musicData:', typeof musicData)
+            
+            if (musicData && typeof musicData === 'object') {
+                console.log('Validação OK, setando song e explicacao')
+                setSong(musicData)
+                setExplicacao(musicData.explicacao || '')
             } else {
-                setErro('Resposta inválida do servidor: musica não é um objeto')
-                throw new Error('Resposta inválida do servidor: musica não é um objeto')
+                console.warn('Validação falhou:', { musicData, tipo: typeof musicData })
+                setErro('Resposta inválida do servidor: dados da música não são um objeto')
+                throw new Error('Resposta inválida do servidor: dados da música não são um objeto')
             }
+
 
         }
         catch(e) {
@@ -60,6 +72,12 @@ function RecommendPage() {
         {isLoading ? (
             <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center', height: 200}}>
                 <Spin size="large" />
+            </div>
+        ) : erro ? (
+            <div style={{color: 'red', textAlign: 'center', maxWidth: 600}}>
+                <h3>Erro ao buscar recomendação</h3>
+                <p>{typeof erro === 'string' ? erro : erro?.message || 'Erro desconhecido'}</p>
+                <button onClick={() => { setSong(null); setExplicacao(''); setErro(''); }}>Tentar novamente</button>
             </div>
         ) : (!isLoading && song == null) ? (
             <form onSubmit={(e) => { e.preventDefault(); const fd = new FormData(e.target); postRecommendation(fd); }} style={{display: 'flex', flexDirection: 'column'}}>
@@ -83,22 +101,21 @@ function RecommendPage() {
             <button type="submit">Enviar</button>
         </form>
         ) : (
-//             <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
-//                 <h3>Recomendação</h3>
-//                 <p style={{fontWeight: 700, margin: 6}}>{song?.titulo || 'Título'} de {song?.artista || "Artista"}</p>
-//                 <a href={song?.spotify_url || ''} target="_blank" rel="noreferrer" style={{backgroundColor: '#118825ff', padding: '0.75rem 1rem', borderRadius: '1rem', textDecoration: 'none', color: '#FFF', fontWeight: 'bold', display: 'inline-flex', alignItems: 'center', gap: '0.5rem'}}>
-//                     <img src={spotifyImg} alt="Logo do Spotify" style={{height: 20}} />
-//                     Escute aqui!
-//                 </a>
-//                 <div style={{maxWidth: 600, textAlign: 'left'}}>
-//                     <strong>Explicação:</strong>
-//                    <p style={{marginTop: 6}}>
-//     {typeof explicacao === 'string' ? explicacao : JSON.stringify(explicacao)}
-// </p>
-//                 </div>
-<p>{erro}</p>
-//                 {/* <button onClick={() => { setSong(null); setExplicacao(''); }}>Fazer outra recomendação</button> */}
-//             </div>
+            <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+                <h3>Recomendação</h3>
+                <p style={{fontWeight: 700, margin: 6}}>{song?.titulo || 'Título'} de {song?.artista || "Artista"}</p>
+                <a href={song?.spotify_url || ''} target="_blank" rel="noreferrer" style={{backgroundColor: '#118825ff', padding: '0.75rem 1rem', borderRadius: '1rem', textDecoration: 'none', color: '#FFF', fontWeight: 'bold', display: 'inline-flex', alignItems: 'center', gap: '0.5rem'}}>
+                    <img src={spotifyImg} alt="Logo do Spotify" style={{height: 20}} />
+                    Escute aqui!
+                </a>
+                <div style={{maxWidth: 600, textAlign: 'left'}}>
+                    <strong>Explicação:</strong>
+                   <p style={{marginTop: 6}}>
+    {typeof explicacao === 'string' ? explicacao : JSON.stringify(explicacao)}
+</p>
+                </div>
+                <button onClick={() => { setSong(null); setExplicacao(''); }}>Fazer outra recomendação</button>
+            </div>
         )}
         </div>
         </>
