@@ -13,7 +13,7 @@ function App() {
         <div>
 
         <Link to='/recommend' style={{backgroundColor: '#118825ff', padding: '1rem', borderRadius: '1rem', textDecoration: 'none', color: '#FFF', fontWeight: 'bold'}}>Receba uma recomendação! </Link>
-        {/* <Link to='/knowledge-base' is='' style={{backgroundColor: '#d3c911ff', padding: '1rem', borderRadius: '1rem', textDecoration: 'none', color: '#FFF', fontWeight: 'bold'}} >Adicione músicas! </Link> */}
+        <Link to='/knowledge-base' is='' style={{backgroundColor: '#d3c911ff', padding: '1rem', borderRadius: '1rem', textDecoration: 'none', color: '#FFF', fontWeight: 'bold'}} >Adicione músicas! </Link>
         </div>
       </div>
     </>

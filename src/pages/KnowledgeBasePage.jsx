@@ -1,7 +1,7 @@
 import { Spin } from "antd"
 import { useState } from "react"
 import Navbar from "../components/navbar";
-function RecommendPage() {
+function KnowledgeBasePage() {
     const [isLoading, setIsLoading] = useState(false);
     const [song, setSong] = useState('')
     const [explicacao, setExplicacao] = useState('')
@@ -16,7 +16,7 @@ function RecommendPage() {
                 eh_curta: formData.get("curta") == null ? false : true
             }
 
-            const response = await fetch(`${import.meta.env.VITE_API_URL}/recomendacao`, {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/base-conhecimento`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -42,19 +42,22 @@ function RecommendPage() {
             setIsLoading(false)
         }
     }
+
+    const searchSongSpotify = async (e) => {
+
+    }
     return(
         <>
         <Navbar/>
         <div style={{display: 'flex', flexDirection: 'column', alignItems:'center', justifyContent: 'center', marginTop: '2rem'}}>
         <h1>Spotispec: recomendador de música</h1>
-        <h2>Selecione o que você gostaria na sua música!</h2>
+        <h2>Adicione músicas à base de conhecimento!</h2>
         {isLoading ? (
             <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center', height: 200}}>
                 <Spin size="large" />
             </div>
         ) : (!isLoading && song == '') ? (
             <form onSubmit={(e) => { e.preventDefault(); const fd = new FormData(e.target); postRecommendation(fd); }} style={{display: 'flex', flexDirection: 'column'}}>
-            <label htmlFor="genero">Gênero da música</label>
             <select name="genero" id="genero">
                 <option value="Rock">Rock</option>
                 <option value="Pop">Pop</option>
@@ -68,9 +71,13 @@ function RecommendPage() {
                 <option value="Média">Média</option>
                 <option value="Baixa">Baixa</option>
             </select>
+            <div>
 
             <label htmlFor="curta">Menor que 3:30 minutos</label>
             <input type="checkbox" name="curta" id="curta" />
+            </div>
+            <label htmlFor="genero">Digite o nome da música</label>
+            <input type="search" name="musica" id=""  onChange={(e) => { e.preventDefault(); searchSongSpotify(e.target); }} style={{marginBottom: '3rem'}}/>
             <button type="submit">Enviar</button>
         </form>
         ) : (
@@ -81,7 +88,7 @@ function RecommendPage() {
                     <strong>Explicação:</strong>
                     <p style={{marginTop: 6}}>{explicacao}</p>
                 </div>
-                <button onClick={() => { setSong(''); setExplicacao(''); }}>Fazer outra recomendação</button>
+                <button onClick={() => { setSong(''); setExplicacao(''); }}>Tentar novamente</button>
             </div>
         )}
         </div>
@@ -90,4 +97,4 @@ function RecommendPage() {
     )
 }
 
-export default RecommendPage
+export default KnowledgeBasePage
