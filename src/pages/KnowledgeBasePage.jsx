@@ -3,7 +3,7 @@ import { useState } from "react"
 import Navbar from "../components/navbar";
 function KnowledgeBasePage() {
     const [isLoading, setIsLoading] = useState(false);
-    const [song, setSong] = useState('')
+    const [song, setSong] = useState(null)
     const [explicacao, setExplicacao] = useState('')
 
     const postRecommendation = async (formData) => {
@@ -32,7 +32,7 @@ function KnowledgeBasePage() {
             const data = await response.json()
             setSong(data.musica)
             setExplicacao(data.explicacao || '')
-            console.log(data)
+
         }
         catch(e) {
             console.error(e)
@@ -88,7 +88,7 @@ function KnowledgeBasePage() {
                     <strong>Explicação:</strong>
                     <p style={{marginTop: 6}}>{explicacao}</p>
                 </div>
-                <button onClick={() => { setSong(''); setExplicacao(''); }}>Tentar novamente</button>
+                <button onClick={() => { setSong(null); setExplicacao(''); }}>Tentar novamente</button>
             </div>
         )}
         </div>
