@@ -77,14 +77,14 @@ function RecommendPage() {
         ) : (
             <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
                 <h3>Recomendação</h3>
-                <p style={{fontWeight: 700, margin: 6}}>{song.titulo} de {song.artista}</p>
+                <p style={{fontWeight: 700, margin: 6}}>{song?.titulo || 'Título'} de {song?.artista || "Artista"}</p>
                 <a href={song.spotify_url} target="_blank" rel="noreferrer" style={{backgroundColor: '#118825ff', padding: '0.75rem 1rem', borderRadius: '1rem', textDecoration: 'none', color: '#FFF', fontWeight: 'bold', display: 'inline-flex', alignItems: 'center', gap: '0.5rem'}}>
                     <img src={spotifyImg} alt="Logo do Spotify" style={{height: 20}} />
                     Escute aqui!
                 </a>
                 <div style={{maxWidth: 600, textAlign: 'left'}}>
                     <strong>Explicação:</strong>
-                    <p style={{marginTop: 6}}>{explicacao}</p>
+                    <p style={{marginTop: 6}}>{explicacao || "Explicação"}</p>
                 </div>
                 <button onClick={() => { setSong(null); setExplicacao(''); }}>Fazer outra recomendação</button>
             </div>
