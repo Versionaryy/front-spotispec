@@ -31,14 +31,14 @@ function KnowledgeBasePage() {
                 genero: formData.get("genero"),
                 energia: formData.get("energia"),
                 eh_curta: formData.get("curta") == null ? false : true,
-                musica: {
+                musicas: [{
                     titulo: selectedSong.name,
                     artista: selectedSong.artists[0].name || '',
                     spotify_url: selectedSong.href || ''
-                }
+                }]
             }
 
-            const response = await fetch(`${import.meta.env.VITE_API_URL}/base-conhecimento`, {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/aquisicao-conhecimento`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -123,7 +123,7 @@ function KnowledgeBasePage() {
                 </div>
 
                 {selectedSong && (
-                    <div style={{padding: '1rem', backgroundColor: '#f0f0f0', borderRadius: '4px'}}>
+                    <div style={{padding: '1rem', backgroundColor: '#000', borderRadius: '4px'}}>
                         <strong>Música selecionada:</strong>
                         <p style={{margin: '0.5rem 0'}}>{selectedSong?.name || selectedSong?.titulo} - {selectedSong?.artists?.[0]?.name || selectedSong?.artista}</p>
                     </div>
