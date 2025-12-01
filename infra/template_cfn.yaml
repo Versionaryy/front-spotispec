@@ -4,7 +4,7 @@ Description: Infraestrutura para React com S3 e CloudFront (Sem Route53)
 Parameters:
   ProjectName:
     Type: String
-    Default: front-spotispec
+    Default: new-front-spotispec
     Description: Nome base para os recursos
 
 Resources:
