@@ -1,9 +1,10 @@
 import { Spin } from "antd"
 import { useState } from "react"
 import Navbar from "../components/navbar";
+import spotifyImg from "../assets/spotify.png"
 function RecommendPage() {
     const [isLoading, setIsLoading] = useState(false);
-    const [song, setSong] = useState('')
+    const [song, setSong] = useState(null)
     const [explicacao, setExplicacao] = useState('')
 
     const postRecommendation = async (formData) => {
@@ -32,7 +33,7 @@ function RecommendPage() {
             const data = await response.json()
             setSong(data.musica)
             setExplicacao(data.explicacao || '')
-            console.log(data)
+
         }
         catch(e) {
             console.error(e)
@@ -52,7 +53,7 @@ function RecommendPage() {
             <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center', height: 200}}>
                 <Spin size="large" />
             </div>
-        ) : (!isLoading && song == '') ? (
+        ) : (!isLoading && song == null) ? (
             <form onSubmit={(e) => { e.preventDefault(); const fd = new FormData(e.target); postRecommendation(fd); }} style={{display: 'flex', flexDirection: 'column'}}>
             <label htmlFor="genero">Gênero da música</label>
             <select name="genero" id="genero">
@@ -76,12 +77,16 @@ function RecommendPage() {
         ) : (
             <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
                 <h3>Recomendação</h3>
-                <p style={{fontWeight: 700, margin: 6}}>{song}</p>
+                <p style={{fontWeight: 700, margin: 6}}>{song.titulo} de {song.artista}</p>
+                <a href={song.spotify_url} target="_blank" rel="noreferrer" style={{backgroundColor: '#118825ff', padding: '0.75rem 1rem', borderRadius: '1rem', textDecoration: 'none', color: '#FFF', fontWeight: 'bold', display: 'inline-flex', alignItems: 'center', gap: '0.5rem'}}>
+                    <img src={spotifyImg} alt="Logo do Spotify" style={{height: 20}} />
+                    Escute aqui!
+                </a>
                 <div style={{maxWidth: 600, textAlign: 'left'}}>
                     <strong>Explicação:</strong>
                     <p style={{marginTop: 6}}>{explicacao}</p>
                 </div>
-                <button onClick={() => { setSong(''); setExplicacao(''); }}>Fazer outra recomendação</button>
+                <button onClick={() => { setSong(null); setExplicacao(''); }}>Fazer outra recomendação</button>
             </div>
         )}
         </div>
