@@ -6,6 +6,7 @@ function RecommendPage() {
     const [isLoading, setIsLoading] = useState(false);
     const [song, setSong] = useState(null)
     const [explicacao, setExplicacao] = useState('')
+    const [erro, setErro] = useState('')
 
     const postRecommendation = async (formData) => {
         try {
@@ -27,6 +28,7 @@ function RecommendPage() {
 
             if (!response.ok) {
                 const text = await response.text();
+                setErro(`Erro na requisição: ${response.status} ${text}`)
                 throw new Error(`Erro na requisição: ${response.status} ${text}`)
             }
 
@@ -35,13 +37,15 @@ function RecommendPage() {
                 setSong(data.musica)
                 setExplicacao(data.explicacao || '')
             } else {
+                setErro('Resposta inválida do servidor: musica não é um objeto')
                 throw new Error('Resposta inválida do servidor: musica não é um objeto')
             }
 
         }
         catch(e) {
             console.error(e)
-            // opcional: mostrar mensagem ao usuário
+            setErro(e)
+          
         }
         finally {
             setIsLoading(false)
@@ -79,11 +83,22 @@ function RecommendPage() {
             <button type="submit">Enviar</button>
         </form>
         ) : (
-            
-            <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
-                
-                <p>Funcionou</p>
-            </div>
+//             <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+//                 <h3>Recomendação</h3>
+//                 <p style={{fontWeight: 700, margin: 6}}>{song?.titulo || 'Título'} de {song?.artista || "Artista"}</p>
+//                 <a href={song?.spotify_url || ''} target="_blank" rel="noreferrer" style={{backgroundColor: '#118825ff', padding: '0.75rem 1rem', borderRadius: '1rem', textDecoration: 'none', color: '#FFF', fontWeight: 'bold', display: 'inline-flex', alignItems: 'center', gap: '0.5rem'}}>
+//                     <img src={spotifyImg} alt="Logo do Spotify" style={{height: 20}} />
+//                     Escute aqui!
+//                 </a>
+//                 <div style={{maxWidth: 600, textAlign: 'left'}}>
+//                     <strong>Explicação:</strong>
+//                    <p style={{marginTop: 6}}>
+//     {typeof explicacao === 'string' ? explicacao : JSON.stringify(explicacao)}
+// </p>
+//                 </div>
+<p>{erro}</p>
+//                 {/* <button onClick={() => { setSong(null); setExplicacao(''); }}>Fazer outra recomendação</button> */}
+//             </div>
         )}
         </div>
         </>
