@@ -6,6 +6,7 @@ function KnowledgeBasePage() {
     const [isLoading, setIsLoading] = useState(false);
     const [selectedSong, setSelectedSong] = useState(null) // Música selecionada no formulário
     const [completedSong, setCompletedSong] = useState(null) // Música adicionada com sucesso
+    const [error, setError] = useState('') // Mensagem de erro
     const [explicacao, setExplicacao] = useState()
 
     const handleSongSelect = (song) => {
@@ -29,12 +30,12 @@ function KnowledgeBasePage() {
             const formData = new FormData(e.target)
             const payload = {
                 genero: formData.get("genero"),
-                energia: formData.get("energia"),
+                energia: formData.get("energia") === 'Média' ? 'Media' : formData.get("energia"),
                 eh_curta: formData.get("curta") == null ? false : true,
                 musicas: [{
                     titulo: selectedSong.name,
                     artista: selectedSong.artists[0].name || '',
-                    spotify_url: selectedSong.href || ''
+                    spotify_url: selectedSong.external_urls.spotify || ''
                 }]
             }
 
@@ -55,11 +56,13 @@ function KnowledgeBasePage() {
             // Só muda para a tela de sucesso após a resposta do servidor
             setCompletedSong(selectedSong)
             setExplicacao(data.explicacao || 'Música adicionada com sucesso!')
+            setError('')
 
         }
         catch(e) {
             console.error(e)
-            setExplicacao('Erro ao adicionar música. Tente novamente.')
+            setError(e.message || 'Erro ao adicionar música. Tente novamente.')
+            setCompletedSong(null)
         }
         finally {
             setIsLoading(false)
@@ -70,6 +73,7 @@ function KnowledgeBasePage() {
         setSelectedSong(null)
         setCompletedSong(null)
         setExplicacao('')
+        setError('')
     }
     return(
         <>
@@ -80,6 +84,16 @@ function KnowledgeBasePage() {
         {isLoading ? (
             <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center', height: 200}}>
                 <Spin size="large" />
+            </div>
+        ) : error ? (
+            <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', maxWidth: 600}}>
+                <div style={{padding: '1rem', backgroundColor: '#fee', border: '1px solid #f00', borderRadius: '4px', marginBottom: '1rem', color: '#c00', fontWeight: 'bold'}}>
+                    ✗ Erro ao adicionar música
+                </div>
+                <p style={{marginBottom: '1rem'}}>{error}</p>
+                <button onClick={resetForm} style={{padding: '0.75rem 1.5rem', backgroundColor: '#118825ff', color: '#fff', border: 'none', borderRadius: '4px', cursor: 'pointer'}}>
+                    Voltar ao formulário
+                </button>
             </div>
         ) : completedSong ? (
             <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', maxWidth: 600}}>
