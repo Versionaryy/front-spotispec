@@ -110,7 +110,10 @@ function KnowledgeBasePage() {
                     <select name="genero" id="genero" style={{width: '100%', padding: '0.5rem'}}>
                         <option value="Rock">Rock</option>
                         <option value="Pop">Pop</option>
-                        <option value="Hip Hop">Hip Hop</option>
+                        <option value="Hip-Hop">Hip-Hop</option>
+                        <option value="Metal">Metal</option>
+                        <option value="MPB">MPB</option>
+                        <option value="Sertanejo">Sertanejo</option>
                         <option value="Eletrônica">Eletrônica</option>
                     </select>
                 </div>
