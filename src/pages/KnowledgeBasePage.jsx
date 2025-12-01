@@ -4,7 +4,7 @@ import Navbar from "../components/navbar";
 function KnowledgeBasePage() {
     const [isLoading, setIsLoading] = useState(false);
     const [song, setSong] = useState(null)
-    const [explicacao, setExplicacao] = useState('')
+    const [explicacao, setExplicacao] = useState()
 
     const postRecommendation = async (formData) => {
         try {
@@ -56,7 +56,7 @@ function KnowledgeBasePage() {
             <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center', height: 200}}>
                 <Spin size="large" />
             </div>
-        ) : (!isLoading && song == '') ? (
+        ) : (!isLoading && song == null) ? (
             <form onSubmit={(e) => { e.preventDefault(); const fd = new FormData(e.target); postRecommendation(fd); }} style={{display: 'flex', flexDirection: 'column'}}>
             <select name="genero" id="genero">
                 <option value="Rock">Rock</option>
